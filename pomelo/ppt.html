@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Pomelo简介</title>
+
+    <meta name="author" content="jinxc">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/sky.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+</head>
+
+<body>
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+
+<section>
+    <section data-markdown>
+        <script type="text/template">
+            ## Pomelo
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 结构
+            ![](./img/介绍.png)
+
+            - 框架, pomelo的核心, 高性能、分布式、简单
+            - 库, 如人工智能(ai), 寻路， aoi等
+            - 工具包, 包括管理控制台, 命令行工具等
+        </script>
+    </section>
+
+    <section data-markdown>
+        <script type="text/template">
+            #### 特性
+            ###### 高可伸缩、性能
+            - 分布式（多进程）架构
+            - 服务器扩展灵活、方便
+            - 充分的压力测试和优化
+        </script>
+    </section>
+
+    <section data-markdown>
+        <script type="text/template">
+            ###### 易用
+            - 极简的API，请求、响应、广播
+            - 几乎零配置，Convention over configuration
+            - 基于node.js，轻量，开发快速
+        </script>
+    </section>
+
+    <section data-markdown>
+        <script type="text/template">
+            ###### 强大
+            - 库和工具包完整、强大
+        </script>
+    </section>
+</section>
+
+<section>
+    <section data-markdown>
+        <script type="text/template">
+            ## 使用
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 安装
+            >npm install pomelo -g
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 新建项目
+            - 本地新建目录：
+            mkdir helloWorld
+            - 进入新建目录：
+            cd helloWorld
+            - 初始化项目：
+            pomelo init .
+            - 安装依赖包：
+            sh npm-install.sh
+        </script>
+    </section>
+
+    <section data-markdown>
+        <script type="text/template">
+            ![](./img/目录.png)
+        </script>
+    </section>
+
+    <section data-markdown>
+        <script type="text/template">
+            #### 启动项目
+            分别启动game-server(游戏服务器)和web-server(web服务器)。
+        </script>
+    </section>
+</section>
+
+
+<section>
+    <section data-markdown>
+        <script type="text/template">
+            ## 架构
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            ![](./img/服务.png)
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### gate服务器
+            作用:做前端的负载均衡。客户端往往首先向gate服务器发出请求，gate会给客户端分配具体的connector服务器。
+        </script>
+    </section>
+
+    <section data-markdown>
+        <script type="text/template">
+            #### connector服务器
+            connector服务器接收客户端的连接请求，创建与客户端的连接，维护客户端的session信息。
+        </script>
+    </section>
+
+    <section data-markdown>
+        <script type="text/template">
+            #### chart服务器
+            完成实际的应用逻辑，向客户端提供服务。
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### master服务器
+            master服务器加载配置文件，通过读取配置文件，启动所配置的服务器集群，并对所有服务器进行管理。
+        </script>
+    </section>
+</section>
+
+<section>
+    <section data-markdown>
+        <script type="text/template">
+            ## 部件
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            ## Channel
+            Channel主要用于需要广播推送消息的场景。可以把某个玩家加入到一个Channel中，当对这个Channel推送消息的时候，所有加入到这个Channel的玩家都会收到推送过来的消息。
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 特点
+            - 用户和Channel是多对多的关系。
+            - Channel都是服务器本地的，服务器A上创建的Channel，只能由服务器A才能给它推送消息。
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### API
+            - add
+            - leave
+            - getMembers
+            - getMember
+            - destroy
+            - pushMessage
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            ## Router
+            解决用户请求的服务器分配问题。
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 路由函数
+            <pre><code data-trim contenteditable>
+                function(key, msg, app, cb) {
+                ……
+                }
+            </code></pre>
+
+            - key:计算路由的参数
+            - msg:描述了当前rpc调用的所有信息，包括调用的服务器类型，服务器名字，具体的调用方法等信息
+            - app:上下文变量
+            - cb:回调函数
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            ## filter
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 用途
+            在逻辑服务器处理请求之前/后对用户请求做一些前置/善后处理。
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 结构
+            <pre><code data-trim contenteditable>
+                var Filter = function () {
+                // ....
+                };
+
+                Filter.prototype.before = function(msg, session, next) {
+                // ...
+                }
+
+                Filter.prototype.after = function(err, msg, session, resp, next) {
+                // ...
+                }
+            </code></pre>
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 应用Filter
+            <pre><code data-trim contenteditable>
+                app.configure('production|development', 'chat', function() {
+                app.filter(Filter());
+                }
+            </code></pre>
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            ## RPC
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 作用
+            在多进程应用中的进程间通讯。
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 使用
+            <pre><code data-trim contenteditable>
+                // route
+                var routeParam = session;
+                app.rpc.area.playerRemote.leaveTeam(routeParam, args..., cb);
+
+                // to specified server 'area-server-1'
+                app.rpc.area.playerRemote.leaveTeam.toServer('area-server-1', args..., cb);
+
+                // broadcast to all the area servers
+                app.rpc.area.playerRemote.leaveTeam.toServer('*', args..., cb);
+            </code></pre>
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            ## 组件&插件
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 介绍
+            pomelo的核心是由一系列松耦合的component组成,可以自定义的component来完成一些自己定制的功能。
+
+            插件的结构主要包括两个部分：components和events，其中components是必要的，events则可以根据插件自身所需功能进行配置。
+
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### component结构
+            <pre><code data-trim contenteditable>
+                module.exports = function(app, opts) {
+                return new Component(app, opts);
+                };
+
+                var Component = function(app, opts) {
+                //do construction
+                };
+
+                Component.prototype.start = function(cb) {
+                // do something application start
+                };
+
+                Component.prototype.afterStart = function(cb) {
+                // do something after application started
+                };
+
+                Component.prototype.stop = function(force, cb) {
+                // do something on application stop
+                };
+            </code></pre>
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### events（插件机制）
+            <pre><code data-trim contenteditable>
+                module.exports = function(app) {
+                return new Event(app, opts);
+                };
+
+                var Event = function(app) {
+                //do construction
+                };
+
+                Event.prototype.add_servers = function(servers) {
+                //do something when application add servers
+                };
+
+                Event.prototype.remove_servers = function(ids) {
+                //do something when application remove servers
+                };
+
+                Event.prototype.replace_servers = function(servers) {
+                //do something when server reconnected
+                };
+
+                Event.prototype.bind_session = function(session) {
+                //do something when session binded
+                };
+
+                Event.prototype.close_session = function(session) {
+                //do something when session closed
+                };
+            </code></pre>
+        </script>
+    </section>
+</section>
+
+<section>
+    <section data-markdown>
+        <script type="text/template">
+            ## 其他
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 客户端
+            <pre><code data-trim contenteditable>
+                Javascript
+                websocket version: pomelonode/pomelo-jsclient-websocket
+                socket.io version: pomelonode/pomelo-jsclient-socket.io
+
+                C
+                socket vesion: NetEase/libpomelo
+
+                iOS
+                socket.io version: NetEase / pomelo-iosclient
+                socket version: ETiV / PomeloClient-iOS-WebSocket
+
+                Android & Java
+                NetEase / pomelo-androidclient
+                jzsues / pomelo-websocket-java-client
+
+                unity3d
+                socket.io version: NetEase / pomelo-unityclient
+                socket version: NetEase / pomelo-unityclient-socket
+
+                flash
+                socket.io version: stokegames / pomelo-flashclient
+                socket version: D-Deo / pomelo-flash-tcp
+
+                cocos2dx
+                c++: NetEase / pomelo-cocos2dchat
+            </code></pre>
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### pomelo admin web
+            通过 web 端的方式来对游戏服务器集群的运行状态，性能，日志等进行实时的监控。
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 发送策略
+            前端服务器不会直接将要发送的消息通过socket直接发送给客户端，而是将发送任务调度给CoPushScheduler，CoPushScheduler可以实现具体的发送策略。
+
+            pomelo中提供了两种方式的pushScheduler，direct会立即将用户的响应发送给用户，buffer则会缓冲发送任务，并按时冲刷，pomelo默认使用的是direct的方式，如果想使用buffer的方式，可以通过如下的调用启用:
+
+            <pre><code data-trim contenteditable>
+                app.set('pushSchedulerConfig', {scheduler: pomelo.pushSchedulers.buffer, flushInterval: 20});
+            </code></pre>
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 命令行
+            - init: 创建一个新项目。
+            - start: 启动应用及服务器。
+            - list: 列出当前应用开启的所有服务器的信息。
+            - stop: 关闭应用及服务器或者停止指定的服务器。
+            - kill: 强制关闭应用及服务器。
+            - add: 运行时动态添加服务器。
+            - --version：列出当前使用pomelo的版本信息。
+            - --help：列出所有pomelo支持的命令及使用说明。
+        </script>
+    </section>
+    <section data-markdown>
+        <script type="text/template">
+            #### 分布式/集群
+            - 需要在linux系统下，并采用相同的软件环境
+            - master服务器高可用（zookeeper）
+        </script>
+    </section>
+</section>
+
+
+</div>
+
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: false,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        dependencies: [
+            { src: 'lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: 'plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: 'plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: 'plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: 'plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+</script>
+
+</body>
+</html>
