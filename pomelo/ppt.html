@@ -100,7 +100,50 @@
 
     <section data-markdown>
         <script type="text/template">
+            #### 代码结构
+
             ![](./img/目录.png)
+        </script>
+    </section>
+
+    <section data-markdown>
+        <script type="text/template">
+            #### 配置
+
+            <pre><code data-trim contenteditable>
+                {
+                "development":{
+                "gate":[
+                { "id":"gate-server-1", "host":"127.0.0.1", "clientPort":3014, "frontend": true }
+                ],
+                "connector":[
+                { "id":"connector-server-1", "host":"127.0.0.1", "clientPort":3050, "frontend": true },
+                { "id":"connector-server-2", "host":"127.0.0.1", "clientPort":3051, "frontend": true },
+                { "id":"connector-server-3", "host":"127.0.0.1", "clientPort":3052, "frontend": true }
+                ],
+                "chat":[
+                { "id":"chat-server-1", "host":"127.0.0.1", "port":6050 },
+                { "id":"chat-server-2", "host":"127.0.0.1", "port":6051 },
+                { "id":"chat-server-3", "host":"127.0.0.1", "port":6052 }
+                ]
+                },
+                "production":{
+                "gate":[
+                { "id":"gate-server-1", "host":"127.0.0.1", "clientPort":3014, "frontend": true }
+                ],
+                "connector":[
+                { "id":"connector-server-1", "host":"127.0.0.1", "clientPort":3050, "frontend": true },
+                { "id":"connector-server-2", "host":"127.0.0.1", "clientPort":3051, "frontend": true },
+                { "id":"connector-server-3", "host":"127.0.0.1", "clientPort":3052, "frontend": true }
+                ],
+                "chat":[
+                { "id":"chat-server-1", "host":"127.0.0.1", "port":6050 },
+                { "id":"chat-server-2", "host":"127.0.0.1", "port":6051 },
+                { "id":"chat-server-3", "host":"127.0.0.1", "port":6052 }
+                ]
+                }
+                }
+            </code></pre>
         </script>
     </section>
 
@@ -153,196 +196,222 @@
 </section>
 
 <section>
-    <section data-markdown>
-        <script type="text/template">
-            ## 部件
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            ## Channel
-            Channel主要用于需要广播推送消息的场景。可以把某个玩家加入到一个Channel中，当对这个Channel推送消息的时候，所有加入到这个Channel的玩家都会收到推送过来的消息。
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### 特点
-            - 用户和Channel是多对多的关系。
-            - Channel都是服务器本地的，服务器A上创建的Channel，只能由服务器A才能给它推送消息。
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### API
-            - add
-            - leave
-            - getMembers
-            - getMember
-            - destroy
-            - pushMessage
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            ## Router
-            解决用户请求的服务器分配问题。
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### 路由函数
-            <pre><code data-trim contenteditable>
-                function(key, msg, app, cb) {
-                ……
-                }
-            </code></pre>
+<section data-markdown>
+    <script type="text/template">
+        ## 部件
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        ## Channel
+        Channel主要用于需要广播推送消息的场景。可以把某个玩家加入到一个Channel中，当对这个Channel推送消息的时候，所有加入到这个Channel的玩家都会收到推送过来的消息。
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### 特点
+        - 用户和Channel是多对多的关系。
+        - Channel都是服务器本地的，服务器A上创建的Channel，只能由服务器A才能给它推送消息。
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### API
+        - add
+        - leave
+        - getMembers
+        - getMember
+        - destroy
+        - pushMessage
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### code
+        <pre><code data-trim contenteditable>
+            var channel = this.channelService.getChannel(name, flag);
+            channel.pushMessage(param);
+            channel.add(uid, sid);
+        </code></pre>
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        ## Router
+        解决用户请求的服务器分配问题。
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### 路由函数
+        <pre><code data-trim contenteditable>
+            function(key, msg, app, cb) {
+            ……
+            }
+        </code></pre>
 
-            - key:计算路由的参数
-            - msg:描述了当前rpc调用的所有信息，包括调用的服务器类型，服务器名字，具体的调用方法等信息
-            - app:上下文变量
-            - cb:回调函数
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            ## filter
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### 用途
-            在逻辑服务器处理请求之前/后对用户请求做一些前置/善后处理。
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### 结构
-            <pre><code data-trim contenteditable>
-                var Filter = function () {
-                // ....
-                };
+        - key:计算路由的参数
+        - msg:描述了当前rpc调用的所有信息，包括调用的服务器类型，服务器名字，具体的调用方法等信息
+        - app:上下文变量
+        - cb:回调函数
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### code
+        <pre><code data-trim contenteditable>
+            var push = function(key, msg, app, cb) {
+            var pushServers = app.getServersByType('push');
+            if(!pushServers || pushServers.length === 0) {
+            cb(new Error('can not find chat servers.'));
+            return;
+            }
+            var res = dispatcher.dispatch(key, pushServers);
+            cb(null, res.id);
+            };
+        </code></pre>
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        ## filter
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### 用途
+        在逻辑服务器处理请求之前/后对用户请求做一些前置/善后处理。
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### 结构
+        <pre><code data-trim contenteditable>
+            var Filter = function () {
+            // ....
+            };
 
-                Filter.prototype.before = function(msg, session, next) {
-                // ...
-                }
+            Filter.prototype.before = function(msg, session, next) {
+            // ...
+            }
 
-                Filter.prototype.after = function(err, msg, session, resp, next) {
-                // ...
-                }
-            </code></pre>
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### 应用Filter
-            <pre><code data-trim contenteditable>
-                app.configure('production|development', 'chat', function() {
-                app.filter(Filter());
-                }
-            </code></pre>
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            ## RPC
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### 作用
-            在多进程应用中的进程间通讯。
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### 使用
-            <pre><code data-trim contenteditable>
-                // route
-                var routeParam = session;
-                app.rpc.area.playerRemote.leaveTeam(routeParam, args..., cb);
+            Filter.prototype.after = function(err, msg, session, resp, next) {
+            // ...
+            }
+        </code></pre>
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### 应用Filter
+        <pre><code data-trim contenteditable>
+            app.configure('production|development', 'chat', function() {
+            app.filter(Filter());
+            }
+        </code></pre>
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        ## RPC
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### 作用
+        在多进程应用中的进程间通讯。
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### 使用
+        <pre><code data-trim contenteditable>
+            // route
+            var routeParam = session;
+            app.rpc.area.playerRemote.leaveTeam(routeParam, args..., cb);
 
-                // to specified server 'area-server-1'
-                app.rpc.area.playerRemote.leaveTeam.toServer('area-server-1', args..., cb);
+            // to specified server 'area-server-1'
+            app.rpc.area.playerRemote.leaveTeam.toServer('area-server-1', args..., cb);
 
-                // broadcast to all the area servers
-                app.rpc.area.playerRemote.leaveTeam.toServer('*', args..., cb);
-            </code></pre>
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            ## 组件&插件
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### 介绍
-            pomelo的核心是由一系列松耦合的component组成,可以自定义的component来完成一些自己定制的功能。
+            // broadcast to all the area servers
+            app.rpc.area.playerRemote.leaveTeam.toServer('*', args..., cb);
+        </code></pre>
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        ## 组件&插件
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### 介绍
+        pomelo的核心是由一系列松耦合的component组成,可以自定义的component来完成一些自己定制的功能。
 
-            插件的结构主要包括两个部分：components和events，其中components是必要的，events则可以根据插件自身所需功能进行配置。
+        插件的结构主要包括两个部分：components和events，其中components是必要的，events则可以根据插件自身所需功能进行配置。
 
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### component结构
-            <pre><code data-trim contenteditable>
-                module.exports = function(app, opts) {
-                return new Component(app, opts);
-                };
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### component结构
+        <pre><code data-trim contenteditable>
+            module.exports = function(app, opts) {
+            return new Component(app, opts);
+            };
 
-                var Component = function(app, opts) {
-                //do construction
-                };
+            var Component = function(app, opts) {
+            //do construction
+            };
 
-                Component.prototype.start = function(cb) {
-                // do something application start
-                };
+            Component.prototype.start = function(cb) {
+            // do something application start
+            };
 
-                Component.prototype.afterStart = function(cb) {
-                // do something after application started
-                };
+            Component.prototype.afterStart = function(cb) {
+            // do something after application started
+            };
 
-                Component.prototype.stop = function(force, cb) {
-                // do something on application stop
-                };
-            </code></pre>
-        </script>
-    </section>
-    <section data-markdown>
-        <script type="text/template">
-            #### events（插件机制）
-            <pre><code data-trim contenteditable>
-                module.exports = function(app) {
-                return new Event(app, opts);
-                };
+            Component.prototype.stop = function(force, cb) {
+            // do something on application stop
+            };
+        </code></pre>
+    </script>
+</section>
+<section data-markdown>
+    <script type="text/template">
+        #### events（插件机制）
+        <pre><code data-trim contenteditable>
+            module.exports = function(app) {
+            return new Event(app, opts);
+            };
 
-                var Event = function(app) {
-                //do construction
-                };
+            var Event = function(app) {
+            //do construction
+            };
 
-                Event.prototype.add_servers = function(servers) {
-                //do something when application add servers
-                };
+            Event.prototype.add_servers = function(servers) {
+            //do something when application add servers
+            };
 
-                Event.prototype.remove_servers = function(ids) {
-                //do something when application remove servers
-                };
+            Event.prototype.remove_servers = function(ids) {
+            //do something when application remove servers
+            };
 
-                Event.prototype.replace_servers = function(servers) {
-                //do something when server reconnected
-                };
+            Event.prototype.replace_servers = function(servers) {
+            //do something when server reconnected
+            };
 
-                Event.prototype.bind_session = function(session) {
-                //do something when session binded
-                };
+            Event.prototype.bind_session = function(session) {
+            //do something when session binded
+            };
 
-                Event.prototype.close_session = function(session) {
-                //do something when session closed
-                };
-            </code></pre>
-        </script>
-    </section>
+            Event.prototype.close_session = function(session) {
+            //do something when session closed
+            };
+        </code></pre>
+    </script>
+</section>
 </section>
 
 <section>
